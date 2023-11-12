@@ -23,74 +23,6 @@ def main():
             sys.exit()
 
 
-def getNewBoard():
-    """Returns a new data structure that represents a board.
-
-    It's a dictionary with keys of (x, y) tuples and values of the tile
-    at that space. The tile is either a power-of-two integer or BLANK.
-    The coordinates are laid out as:
-       X0 1 2 3
-      Y+-+-+-+-+
-      0| | | | |
-       +-+-+-+-+
-      1| | | | |
-       +-+-+-+-+
-      2| | | | |
-       +-+-+-+-+
-      3| | | | |
-       +-+-+-+-+"""
-
-    newBoard = {}  # Contains the board data structure to be returned.
-    # Loop over every possible space and set all the tiles to blank:
-    for x in range(4):
-        for y in range(4):
-            newBoard[(x, y)] = BLANK
-
-    # Pick two random spaces for the two starting 2's:
-    startingTwosPlaced = 0  # The number of starting spaces picked.
-    while startingTwosPlaced < 2:  # Repeat for duplicate spaces.
-        randomSpace = (random.randint(0, 3), random.randint(0, 3))
-        # Make sure the randomly selected space isn't already taken:
-        if newBoard[randomSpace] == BLANK:
-            newBoard[randomSpace] = 2
-            startingTwosPlaced = startingTwosPlaced + 1
-
-    return newBoard
-
-
-def drawBoard(board):
-    """Draws the board data structure on the screen."""
-
-    # Go through each possible space left to right, top to bottom, and
-    # create a list of what each space's label should be.
-    labels = []  # A list of strings for the number/blank for that tile.
-    for y in range(4):
-        for x in range(4):
-            tile = board[(x, y)]  # Get the tile at this space.
-            # Make sure the label is 5 spaces long:
-            labelForThisTile = str(tile).center(5)
-            labels.append(labelForThisTile)
-
-    # The {} are replaced with the label for that tile:
-    print("""
-+-----+-----+-----+-----+
-|     |     |     |     |
-|{}|{}|{}|{}|
-|     |     |     |     |
-+-----+-----+-----+-----+
-|     |     |     |     |
-|{}|{}|{}|{}|
-|     |     |     |     |
-+-----+-----+-----+-----+
-|     |     |     |     |
-|{}|{}|{}|{}|
-|     |     |     |     |
-+-----+-----+-----+-----+
-|     |     |     |     |
-|{}|{}|{}|{}|
-|     |     |     |     |
-+-----+-----+-----+-----+
-""".format(*labels))
 
 
 def getScore(board):
@@ -238,10 +170,14 @@ def isFull(board):
 
 #include <iostream>
 #include <string>
+#include <vector>
+#include <random>
 using namespace std;
 
 // Set up the constants:
 string BLANK = ""; // A value that represents a blank space on the board.
+vector<vector<string>> getNewBoard();
+void drawBoard(vector<vector<string>> board);
 
 int main() {
     cout << "Twenty Forty - Eight, by Al Sweigart al@inventwithpython.com\n\n";
@@ -252,11 +188,144 @@ int main() {
     // input('Press Enter to begin...')
 
 
+
+    vector<vector<string>> t = getNewBoard();
+    drawBoard(t);
     return 0;
 }
 
 
+vector<vector<string>> getNewBoard() {
+    // Returns a new data structure that represents a board.
+    // It's a dictionary with keys of (x, y) tuples and values of the tile
+    // at that space.The tile is either a power - of - two integer or BLANK.
+    // The coordinates are laid out as :
+    //  X0 1 2 3
+    // Y+-+-+-+-+
+    // 0| | | | |
+    //  +-+-+-+-+
+    // 1| | | | |
+    //  +-+-+-+-+
+    // 2| | | | |
+    //  +-+-+-+-+
+    // 3| | | | |
+    //  +-+-+-+-+
+    vector<vector<string>> newBoard; // Contains the board data structure to be returned.
+    // Loop over every possible space and set all the tiles to blank :
+    for (int i = 0; i < 4; ++i) {
+        vector<string> tmp(4, BLANK);
+        newBoard.push_back(tmp);
+    }
+
+    // Pick two random spaces for the two starting 2's:
+    int startingTwosPlaced = 0; // The number of starting spaces picked.
+    while (startingTwosPlaced < 2) { // Repeat for duplicate spaces.
+        std::random_device rd;  // Seed the random number generator
+        std::mt19937 gen(rd()); // Mersenne Twister PRNG engine
+        std::uniform_int_distribution<int> distribution(0, 3); // Define the range
+        // Generate a random number
+        int randomSpace1 = distribution(gen);
+        int randomSpace2 = distribution(gen);
+        // Make sure the randomly selected space isn't already taken:
+        if (newBoard[randomSpace1][randomSpace2] == BLANK) {
+            newBoard[randomSpace1][randomSpace2] = "2";
+            startingTwosPlaced++;
+        }
+    }
+
+    return newBoard;
+}
+
+void drawBoard(vector<vector<string>> board) {
+    // Draws the board data structure on the screen.
+    // Go through each possible space left to right, top to bottom, and
+    // create a list of what each space's label should be.
+    
+    cout << "+-----+-----+-----+-----+\n|     |     |     |     |\n";
+    string one = "|";
+    for (int i = 0; i < 4; ++i) {
+        if (board[0][i] == "") {
+            one += "     |";
+        } else if (board[0][i] == "2") {
+            one += "  2  |";
+        } else { // !!!
+
+        }
+    }
+    cout << one << '\n';
+    cout << "|     |     |     |     |\n";
+    cout << "+-----+-----+-----+-----+\n|     |     |     |     |\n";
+    string two = "|";
+    for (int i = 0; i < 4; ++i) {
+        if (board[1][i] == "") {
+            two += "     |";
+        } else if (board[1][i] == "2") {
+            two += "  2  |";
+        } else { // !!!
+
+        }
+    }
+    cout << two << '\n';
+    cout << "|     |     |     |     |\n";
+    cout << "+-----+-----+-----+-----+\n|     |     |     |     |\n";
+    string three = "|";
+    for (int i = 0; i < 4; ++i) {
+        if (board[2][i] == "") {
+            three += "     |";
+        } else if (board[2][i] == "2") {
+            three += "  2  |";
+        } else { // !!!
+
+        }
+    }
+    cout << three << '\n';
+    cout << "|     |     |     |     |\n";
+    cout << "+-----+-----+-----+-----+\n|     |     |     |     |\n";
+    string four = "|";
+    for (int i = 0; i < 4; ++i) {
+        if (board[3][i] == "") {
+            four += "     |";
+        } else if (board[3][i] == "2") {
+            four += "  2  |";
+        } else { // !!!
+
+        }
+    }
+    cout << four << '\n';
+    cout << "|     |     |     |     |\n";
+    cout << "+-----+-----+-----+-----+\n\n";
+}
 
 
+/*
+def drawBoard(board):
+
+    labels = []  # A list of strings for the number/blank for that tile.
+    for y in range(4):
+        for x in range(4):
+            tile = board[(x, y)]  # Get the tile at this space.
+            # Make sure the label is 5 spaces long:
+            labelForThisTile = str(tile).center(5)
+            labels.append(labelForThisTile)
+
+    # The {} are replaced with the label for that tile:
+    print("""
 
 
+|{}|{}|{}|{}|
+|     |     |     |     |
++-----+-----+-----+-----+
+|     |     |     |     |
+|{}|{}|{}|{}|
+|     |     |     |     |
++-----+-----+-----+-----+
+|     |     |     |     |
+|{}|{}|{}|{}|
+|     |     |     |     |
++-----+-----+-----+-----+
+|     |     |     |     |
+|{}|{}|{}|{}|
+|     |     |     |     |
++-----+-----+-----+-----+
+""".format(*labels))
+*/
