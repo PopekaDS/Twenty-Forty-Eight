@@ -25,18 +25,6 @@ def main():
 
 
 
-def getScore(board):
-    """Returns the sum of all the tiles on the board data structure."""
-    score = 0
-    # Loop over every space and add the tile to the score:
-    for x in range(4):
-        for y in range(4):
-            # Only add non-blank tiles to the score:
-            if board[(x, y)] != BLANK:
-                score = score + board[(x, y)]
-    return score
-
-
 def combineTilesInColumn(column):
     """The column is a list of four tile. Index 0 is the "bottom" of
     the column, and tiles are pulled "down" and combine if they are the
@@ -140,25 +128,6 @@ def askForPlayerMove():
             print('Enter one of "W", "A", "S", "D", or "Q".')
 
 
-def addTwoToBoard(board):
-    """Adds a new 2 tile randomly to the board."""
-    while True:
-        randomSpace = (random.randint(0, 3), random.randint(0, 3))
-        if board[randomSpace] == BLANK:
-            board[randomSpace] = 2
-            return  # Return after finding one non-blank tile.
-
-
-def isFull(board):
-    """Returns True if the board data structure has no blanks."""
-    # Loop over every space on the board:
-    for x in range(4):
-        for y in range(4):
-            # If a space is blank, return False:
-            if board[(x, y)] == BLANK:
-                return False
-    return True  # No space is blank, so return True.
-
 */
 
 // Twenty Forty-Eight, by Al Sweigart al@inventwithpython.com
@@ -178,6 +147,9 @@ using namespace std;
 string BLANK = ""; // A value that represents a blank space on the board.
 vector<vector<string>> getNewBoard();
 void drawBoard(vector<vector<string>> board);
+int getScore(vector<vector<string>>& board);
+void addTwoToBoard(vector<vector<string>>& board);
+bool isFull(vector<vector<string>>& board);
 
 int main() {
     cout << "Twenty Forty - Eight, by Al Sweigart al@inventwithpython.com\n\n";
@@ -191,6 +163,9 @@ int main() {
 
     vector<vector<string>> t = getNewBoard();
     drawBoard(t);
+    cout << getScore(t) << endl;
+    addTwoToBoard(t);
+
     return 0;
 }
 
@@ -248,8 +223,27 @@ void drawBoard(vector<vector<string>> board) {
             one += "     |";
         } else if (board[0][i] == "2") {
             one += "  2  |";
-        } else { // !!!
-
+        } else if (board[0][i] == "4") {
+            one += "  4  |";
+        } else if (board[0][i] == "8") {
+            one += "  8  |";
+        } else if (board[0][i] == "16") {
+            one += " 16  |";
+        } else if (board[0][i] == "32") {
+            one += " 32  |";
+        } else if (board[0][i] == "64") {
+            one += " 64  |";
+        } else if (board[0][i] == "128") {
+            one += " 128 |";
+        } else if (board[0][i] == "256") {
+            one += " 256 |";
+        } else if (board[0][i] == "512") {
+            one += " 512 |";
+        } else if (board[0][i] == "1024") {
+            one += "1024 |";
+        } else {
+            cout << "Error\n";
+            cout << "board[0][i] = |" << board[0][i] << "|\n";
         }
     }
     cout << one << '\n';
@@ -261,8 +255,27 @@ void drawBoard(vector<vector<string>> board) {
             two += "     |";
         } else if (board[1][i] == "2") {
             two += "  2  |";
-        } else { // !!!
-
+        } else if (board[1][i] == "4") {
+            two += "  4  |";
+        } else if (board[1][i] == "8") {
+            two += "  8  |";
+        } else if (board[1][i] == "16") {
+            two += " 16  |";
+        } else if (board[1][i] == "32") {
+            two += " 32  |";
+        } else if (board[1][i] == "64") {
+            two += " 64  |";
+        } else if (board[1][i] == "128") {
+            two += " 128 |";
+        } else if (board[1][i] == "256") {
+            two += " 256 |";
+        } else if (board[1][i] == "512") {
+            two += " 512 |";
+        } else if (board[1][i] == "1024") {
+            two += "1024 |";
+        } else {
+            cout << "Error\n";
+            cout << "board[1][i] = |" << board[1][i] << "|\n";
         }
     }
     cout << two << '\n';
@@ -274,8 +287,27 @@ void drawBoard(vector<vector<string>> board) {
             three += "     |";
         } else if (board[2][i] == "2") {
             three += "  2  |";
-        } else { // !!!
-
+        } else if (board[2][i] == "4") {
+            three += "  4  |";
+        } else if (board[2][i] == "8") {
+            three += "  8  |";
+        } else if (board[2][i] == "16") {
+            three += " 16  |";
+        } else if (board[2][i] == "32") {
+            three += " 32  |";
+        } else if (board[2][i] == "64") {
+            three += " 64  |";
+        } else if (board[2][i] == "128") {
+            three += " 128 |";
+        } else if (board[2][i] == "256") {
+            three += " 256 |";
+        } else if (board[2][i] == "512") {
+            three += " 512 |";
+        } else if (board[2][i] == "1024") {
+            three += "1024 |";
+        } else {
+            cout << "Error\n";
+            cout << "board[2][i] = |" << board[2][i] << "|\n";
         }
     }
     cout << three << '\n';
@@ -287,8 +319,27 @@ void drawBoard(vector<vector<string>> board) {
             four += "     |";
         } else if (board[3][i] == "2") {
             four += "  2  |";
-        } else { // !!!
-
+        } else if (board[3][i] == "4") {
+            four += "  4  |";
+        } else if (board[3][i] == "8") {
+            four += "  8  |";
+        } else if (board[3][i] == "16") {
+            four += " 16  |";
+        } else if (board[3][i] == "32") {
+            four += " 32  |";
+        } else if (board[3][i] == "64") {
+            four += " 64  |";
+        } else if (board[3][i] == "128") {
+            four += " 128 |";
+        } else if (board[3][i] == "256") {
+            four += " 256 |";
+        } else if (board[3][i] == "512") {
+            four += " 512 |";
+        } else if (board[3][i] == "1024") {
+            four += "1024 |";
+        } else {
+            cout << "Error\n";
+            cout << "board[3][i] = |" << board[3][i] << "|\n";
         }
     }
     cout << four << '\n';
@@ -296,36 +347,51 @@ void drawBoard(vector<vector<string>> board) {
     cout << "+-----+-----+-----+-----+\n\n";
 }
 
+int getScore(vector<vector<string>>& board) {
+    // Returns the sum of all the tiles on the board data structure.
+    int score = 0;
+    // Loop over every space and add the tile to the score:
+    for (int i = 0; i < 4; ++i) {
+        for (int j = 0; j < 4; ++j) {
+            // Only add non-blank tiles to the score:
+            if (board[i][j] != BLANK) {
+                int tmp = stoi(board[i][j]);
+                score += tmp;
+            }
+        }
+    }
 
-/*
-def drawBoard(board):
+    return score;
+}
 
-    labels = []  # A list of strings for the number/blank for that tile.
-    for y in range(4):
-        for x in range(4):
-            tile = board[(x, y)]  # Get the tile at this space.
-            # Make sure the label is 5 spaces long:
-            labelForThisTile = str(tile).center(5)
-            labels.append(labelForThisTile)
+void addTwoToBoard(vector<vector<string>>& board) {
+    // Adds a new 2 tile randomly to the board.
+    while (1) {
+        std::random_device rd;  // Seed the random number generator
+        std::mt19937 gen(rd()); // Mersenne Twister PRNG engine
+        std::uniform_int_distribution<int> distribution(0, 3); // Define the range
+        // Generate a random number
+        int randomSpace1 = distribution(gen);
+        int randomSpace2 = distribution(gen);
+        // Make sure the randomly selected space isn't already taken:
+        if (board[randomSpace1][randomSpace2] == BLANK) {
+            board[randomSpace1][randomSpace2] = "2";
+            return; // Return after finding one non - blank tile.
+        }
+    }
+}
 
-    # The {} are replaced with the label for that tile:
-    print("""
+bool isFull(vector<vector<string>>& board) {
+    // Returns True if the board data structure has no blanks.
+    // Loop over every space on the board:
+    for (int i = 0; i < 4; ++i) {
+        for (int j = 0; j < 4; ++j) {
+            // If a space is blank, return False:
+            if (board[i][j] == BLANK) {
+                return false;
+            }
+        }
+    }
 
-
-|{}|{}|{}|{}|
-|     |     |     |     |
-+-----+-----+-----+-----+
-|     |     |     |     |
-|{}|{}|{}|{}|
-|     |     |     |     |
-+-----+-----+-----+-----+
-|     |     |     |     |
-|{}|{}|{}|{}|
-|     |     |     |     |
-+-----+-----+-----+-----+
-|     |     |     |     |
-|{}|{}|{}|{}|
-|     |     |     |     |
-+-----+-----+-----+-----+
-""".format(*labels))
-*/
+    return true; // No space is blank, so return True.
+}
