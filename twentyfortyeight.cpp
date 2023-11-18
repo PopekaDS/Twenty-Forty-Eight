@@ -5,26 +5,6 @@ import random, sys
 
 
 
-def main():
-    
-
-    gameBoard = getNewBoard()
-
-    while True:  # Main game loop.
-        drawBoard(gameBoard)
-        print('Score:', getScore(gameBoard))
-        playerMove = askForPlayerMove()
-        gameBoard = makeMove(gameBoard, playerMove)
-        addTwoToBoard(gameBoard)
-
-        if isFull(gameBoard):
-            drawBoard(gameBoard)
-            print('Game Over - Thanks for playing!')
-            sys.exit()
-
-
-
-
 def combineTilesInColumn(column):
     """The column is a list of four tile. Index 0 is the "bottom" of
     the column, and tiles are pulled "down" and combine if they are the
@@ -109,24 +89,6 @@ def makeMove(board, move):
     return boardAfterMove
 
 
-def askForPlayerMove():
-    """Asks the player for the direction of their next move (or quit).
-
-    Ensures they enter a valid move: either 'W', 'A', 'S' or 'D'."""
-    print('Enter move: (WASD or Q to quit)')
-    while True:  # Keep looping until they enter a valid move.
-        move = input('> ').upper()
-        if move == 'Q':
-            # End the program:
-            print('Thanks for playing!')
-            sys.exit()
-
-        # Either return the valid move, or loop back and ask again:
-        if move in ('W', 'A', 'S', 'D'):
-            return move
-        else:
-            print('Enter one of "W", "A", "S", "D", or "Q".')
-
 
 */
 
@@ -141,6 +103,7 @@ def askForPlayerMove():
 #include <string>
 #include <vector>
 #include <random>
+#include <algorithm>
 using namespace std;
 
 // Set up the constants:
@@ -150,6 +113,7 @@ void drawBoard(vector<vector<string>> board);
 int getScore(vector<vector<string>>& board);
 void addTwoToBoard(vector<vector<string>>& board);
 bool isFull(vector<vector<string>>& board);
+string askForPlayerMove();
 
 int main() {
     cout << "Twenty Forty - Eight, by Al Sweigart al@inventwithpython.com\n\n";
@@ -158,13 +122,20 @@ int main() {
     cout << "added to the board on each move.You win if you can create a 2048 tile.\n";
     cout << "You lose if the board fills up the tiles before then.\n";
     // input('Press Enter to begin...')
+    vector<vector<string>> gameBoard = getNewBoard();
 
-
-
-    vector<vector<string>> t = getNewBoard();
-    drawBoard(t);
-    cout << getScore(t) << endl;
-    addTwoToBoard(t);
+    while (1) { // Main game loop.
+        drawBoard(gameBoard);
+        cout << "Score: " << getScore(gameBoard) << "\n";
+        string playerMove = askForPlayerMove();
+        addTwoToBoard(gameBoard);
+        // gameBoard = makeMove(gameBoard, playerMove)
+        if (isFull(gameBoard)) {
+            drawBoard(gameBoard);
+            cout << "Game Over - Thanks for playing!\n";
+            return 0;
+        }
+    }
 
     return 0;
 }
@@ -395,3 +366,28 @@ bool isFull(vector<vector<string>>& board) {
 
     return true; // No space is blank, so return True.
 }
+
+string askForPlayerMove() {
+    // Asks the player for the direction of their next move (or quit).
+    // Ensures they enter a valid move: either 'W', 'A', 'S' or 'D'.
+    cout << "Enter move: (WASD or Q to quit)\n";
+    while (1) { // Keep looping until they enter a valid move.
+        string move = "";
+        std::cout << "> ";
+        cin >> move;
+        transform(move.begin(), move.end(), move.begin(), ::toupper);
+        if (move == "Q") {
+            // End the program:
+            cout << "Thanks for playing!\n";
+            exit(0);
+        }
+
+        // Either return the valid move, or loop back and ask again:
+        if (move == "W" || move == "A" || move == "S" || move == "D") {
+            return move;
+        } else {
+            cout << "Enter one of 'W', 'A', 'S', 'D', or 'Q'.\n";
+        }
+    }
+}
+
