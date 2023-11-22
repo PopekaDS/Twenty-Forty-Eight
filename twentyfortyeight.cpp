@@ -4,92 +4,6 @@ import random, sys
 
 
 
-
-def combineTilesInColumn(column):
-    """The column is a list of four tile. Index 0 is the "bottom" of
-    the column, and tiles are pulled "down" and combine if they are the
-    same. For example, combineTilesInColumn([2, BLANK, 2, BLANK])
-    returns [4, BLANK, BLANK, BLANK]."""
-
-    # Copy only the numbers (not blanks) from column to combinedTiles
-    combinedTiles = []  # A list of the non-blank tiles in column.
-    for i in range(4):
-        if column[i] != BLANK:
-            combinedTiles.append(column[i])
-
-    # Keep adding blanks until there are 4 tiles:
-    while len(combinedTiles) < 4:
-        combinedTiles.append(BLANK)
-
-    # Combine numbers if the one "above" it is the same, and double it.
-    for i in range(3):  # Skip index 3: it's the topmost space.
-        if combinedTiles[i] == combinedTiles[i + 1]:
-            combinedTiles[i] *= 2  # Double the number in the tile.
-            # Move the tiles above it down one space:
-            for aboveIndex in range(i + 1, 3):
-                combinedTiles[aboveIndex] = combinedTiles[aboveIndex + 1]
-            combinedTiles[3] = BLANK  # Topmost space is always BLANK.
-    return combinedTiles
-
-
-def makeMove(board, move):
-    """Carries out the move on the board.
-
-    The move argument is either 'W', 'A', 'S', or 'D' and the function
-    returns the resulting board data structure."""
-
-    # The board is split up into four columns, which are different
-    # depending on the direction of the move:
-    if move == 'W':
-        allColumnsSpaces = [[(0, 0), (0, 1), (0, 2), (0, 3)],
-                            [(1, 0), (1, 1), (1, 2), (1, 3)],
-                            [(2, 0), (2, 1), (2, 2), (2, 3)],
-                            [(3, 0), (3, 1), (3, 2), (3, 3)]]
-    elif move == 'A':
-        allColumnsSpaces = [[(0, 0), (1, 0), (2, 0), (3, 0)],
-                            [(0, 1), (1, 1), (2, 1), (3, 1)],
-                            [(0, 2), (1, 2), (2, 2), (3, 2)],
-                            [(0, 3), (1, 3), (2, 3), (3, 3)]]
-    elif move == 'S':
-        allColumnsSpaces = [[(0, 3), (0, 2), (0, 1), (0, 0)],
-                            [(1, 3), (1, 2), (1, 1), (1, 0)],
-                            [(2, 3), (2, 2), (2, 1), (2, 0)],
-                            [(3, 3), (3, 2), (3, 1), (3, 0)]]
-    elif move == 'D':
-        allColumnsSpaces = [[(3, 0), (2, 0), (1, 0), (0, 0)],
-                            [(3, 1), (2, 1), (1, 1), (0, 1)],
-                            [(3, 2), (2, 2), (1, 2), (0, 2)],
-                            [(3, 3), (2, 3), (1, 3), (0, 3)]]
-
-    # The board data structure after making the move:
-    boardAfterMove = {}
-    for columnSpaces in allColumnsSpaces:  # Loop over all 4 columns.
-        # Get the tiles of this column (The first tile is the "bottom"
-        # of the column):
-        firstTileSpace = columnSpaces[0]
-        secondTileSpace = columnSpaces[1]
-        thirdTileSpace = columnSpaces[2]
-        fourthTileSpace = columnSpaces[3]
-
-        firstTile = board[firstTileSpace]
-        secondTile = board[secondTileSpace]
-        thirdTile = board[thirdTileSpace]
-        fourthTile = board[fourthTileSpace]
-
-        # Form the column and combine the tiles in it:
-        column = [firstTile, secondTile, thirdTile, fourthTile]
-        combinedTilesColumn = combineTilesInColumn(column)
-
-        # Set up the new board data structure with the combined tiles:
-        boardAfterMove[firstTileSpace] = combinedTilesColumn[0]
-        boardAfterMove[secondTileSpace] = combinedTilesColumn[1]
-        boardAfterMove[thirdTileSpace] = combinedTilesColumn[2]
-        boardAfterMove[fourthTileSpace] = combinedTilesColumn[3]
-
-    return boardAfterMove
-
-
-
 */
 
 // Twenty Forty-Eight, by Al Sweigart al@inventwithpython.com
@@ -114,6 +28,8 @@ int getScore(vector<vector<string>>& board);
 void addTwoToBoard(vector<vector<string>>& board);
 bool isFull(vector<vector<string>>& board);
 string askForPlayerMove();
+vector<string> combineTilesInColumn(vector<string> column);
+vector<vector<string>> makeMove(vector<vector<string>> board, string move);
 
 int main() {
     cout << "Twenty Forty - Eight, by Al Sweigart al@inventwithpython.com\n\n";
@@ -129,7 +45,7 @@ int main() {
         cout << "Score: " << getScore(gameBoard) << "\n";
         string playerMove = askForPlayerMove();
         addTwoToBoard(gameBoard);
-        // gameBoard = makeMove(gameBoard, playerMove)
+        gameBoard = makeMove(gameBoard, playerMove);
         if (isFull(gameBoard)) {
             drawBoard(gameBoard);
             cout << "Game Over - Thanks for playing!\n";
@@ -391,3 +307,106 @@ string askForPlayerMove() {
     }
 }
 
+vector<vector<string>> makeMove(vector<vector<string>> board, string move) {
+    // Carries out the move on the board.
+    // The move argument is either 'W', 'A', 'S', or 'D' and the function
+    // returns the resulting board data structure.
+    // The board is split up into four columns, which are different
+    // depending on the direction of the move:
+    vector<vector<vector<int>>> allColumnsSpaces;
+    if (move == "A") {
+        allColumnsSpaces = { {{0, 0}, {0, 1}, {0, 2}, {0, 3}},
+                            {{1, 0}, {1, 1}, {1, 2}, {1, 3}},
+                            {{2, 0}, {2, 1}, {2, 2}, {2, 3}},
+                            {{3, 0}, {3, 1}, {3, 2}, {3, 3}} };
+    } else if (move == "W") {
+        allColumnsSpaces = { {{0, 0}, {1, 0}, {2, 0}, {3, 0}},
+                            {{0, 1}, {1, 1}, {2, 1}, {3, 1}},
+                            {{0, 2}, {1, 2}, {2, 2}, {3, 2}},
+                            {{0, 3}, {1, 3}, {2, 3}, {3, 3}} };
+    } else if (move == "D") {
+        allColumnsSpaces = { {{0, 3}, {0, 2}, {0, 1}, {0, 0}},
+                            {{1, 3}, {1, 2}, {1, 1}, {1, 0}},
+                            {{2, 3}, {2, 2}, {2, 1}, {2, 0}},
+                            {{3, 3}, {3, 2}, {3, 1}, {3, 0}} };
+    } else if (move == "S") {
+        allColumnsSpaces = { {{3, 0}, {2, 0}, {1, 0}, {0, 0}},
+                            {{3, 1}, {2, 1}, {1, 1}, {0, 1}},
+                            {{3, 2}, {2, 2}, {1, 2}, {0, 2}},
+                            {{3, 3}, {2, 3}, {1, 3}, {0, 3}} };
+    } else {
+        cout << "\n!!!\nERROR\n!!!\n";
+    }
+
+    // The board data structure after making the move:
+    vector<vector<string>> boardAfterMove;
+    for (int i = 0; i < 4; ++i) {
+        vector<string> tmp(4, BLANK);
+        boardAfterMove.push_back(tmp);
+    }
+    for (auto columnSpaces : allColumnsSpaces) { // Loop over all 4 columns.
+        // Get the tiles of this column (The first tile is the "bottom"
+        // of the column):
+        vector<int> firstTileSpace = columnSpaces[0];
+        vector<int> secondTileSpace = columnSpaces[1];
+        vector<int> thirdTileSpace = columnSpaces[2];
+        vector<int> fourthTileSpace = columnSpaces[3];
+
+        string firstTile = board[firstTileSpace[0]][firstTileSpace[1]];
+        string secondTile = board[secondTileSpace[0]][secondTileSpace[1]];
+        string thirdTile = board[thirdTileSpace[0]][thirdTileSpace[1]];
+        string fourthTile = board[fourthTileSpace[0]][fourthTileSpace[1]];
+
+        // Form the column and combine the tiles in it:
+        vector<string> column = { firstTile, secondTile, thirdTile, fourthTile };
+        vector<string> combinedTilesColumn = combineTilesInColumn(column);
+        // Set up the new board data structure with the combined tiles:
+        boardAfterMove[firstTileSpace[0]][firstTileSpace[1]] = combinedTilesColumn[0];
+        boardAfterMove[secondTileSpace[0]][secondTileSpace[1]] = combinedTilesColumn[1];
+        boardAfterMove[thirdTileSpace[0]][thirdTileSpace[1]] = combinedTilesColumn[2];
+        boardAfterMove[fourthTileSpace[0]][fourthTileSpace[1]] = combinedTilesColumn[3];
+    }
+
+    return boardAfterMove;
+}
+
+vector<string> combineTilesInColumn(vector<string> column) {
+    // The column is a list of four tile. Index 0 is the "bottom" of
+    // the column, and tiles are pulled "down" and combine if they are the
+    // same. For example, combineTilesInColumn([2, BLANK, 2, BLANK])
+    // returns [4, BLANK, BLANK, BLANK].
+    
+    // Copy only the numbers (not blanks) from column to combinedTiles
+    vector<string> combinedTiles; // A list of the non-blank tiles in column.
+
+    for (int i = 0; i < 4; ++i) {
+        if (column[i] != BLANK) {
+            combinedTiles.push_back(column[i]);
+        }
+    }
+    
+    // Keep adding blanks until there are 4 tiles:
+    while (combinedTiles.size() < 4) { 
+        combinedTiles.push_back(BLANK);
+    }
+
+    // Combine numbers if the one "above" it is the same, and double it.
+    for (int i = 0; i < 3; ++i) { // Skip index 3: it's the topmost space.
+        if (combinedTiles[i] == combinedTiles[i + 1]) {
+            int help = 0;
+            if (combinedTiles[i] != BLANK) { // Double the number in the tile.
+                help = stoi(combinedTiles[i]);
+                help *= 2;
+                combinedTiles[i] = to_string(help);
+            }
+
+            // Move the tiles above it down one space:
+            for (int j = i + 1; j < 3; ++j) {
+                combinedTiles[j] = combinedTiles[j + 1];
+            }
+            combinedTiles[3] = BLANK; // Topmost space is always BLANK.
+        }
+    }
+
+    return combinedTiles;
+}
