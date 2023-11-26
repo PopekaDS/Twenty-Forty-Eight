@@ -1,17 +1,10 @@
-/*
-
-import random, sys
-
-
-
-*/
-
-// Twenty Forty-Eight, by Al Sweigart al@inventwithpython.com
+// Twenty Forty-Eight, by Al Sweigart
 // A sliding tile game to combine exponentially-increasing numbers.
 // Inspired by Gabriele Cirulli's 2048, which is a clone of Veewo Studios'
 // 1024, which in turn is a clone of the Threes! game.
 // More info at https://en.wikipedia.org/wiki/2048_(video_game)
 // This code is available at https://nostarch.com/big-book-small-python-programming
+// #79 TWENTY FORTY - EIGHT
 
 #include <iostream>
 #include <string>
@@ -44,8 +37,8 @@ int main() {
         drawBoard(gameBoard);
         cout << "Score: " << getScore(gameBoard) << "\n";
         string playerMove = askForPlayerMove();
-        addTwoToBoard(gameBoard);
         gameBoard = makeMove(gameBoard, playerMove);
+        addTwoToBoard(gameBoard);
         if (isFull(gameBoard)) {
             drawBoard(gameBoard);
             cout << "Game Over - Thanks for playing!\n";
@@ -100,6 +93,7 @@ vector<vector<string>> getNewBoard() {
 
 void drawBoard(vector<vector<string>> board) {
     // Draws the board data structure on the screen.
+    
     // Go through each possible space left to right, top to bottom, and
     // create a list of what each space's label should be.
     
