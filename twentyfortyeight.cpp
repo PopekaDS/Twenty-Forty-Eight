@@ -30,7 +30,7 @@ int main() {
     cout << "like numbers will combine into larger - numbered tiles.A new 2 tile is\n";
     cout << "added to the board on each move.You win if you can create a 2048 tile.\n";
     cout << "You lose if the board fills up the tiles before then.\n";
-    // input('Press Enter to begin...')
+
     vector<vector<string>> gameBoard = getNewBoard();
 
     while (1) { // Main game loop.
